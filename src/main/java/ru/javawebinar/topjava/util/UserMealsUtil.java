@@ -10,6 +10,7 @@ import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -27,32 +28,19 @@ public class UserMealsUtil {
                 new UserMeal(LocalDateTime.of(2015, Month.MAY, 31, 20, 0), "Ужин", 510)
         );
         getFilteredWithExceeded(mealList, LocalTime.of(7, 0), LocalTime.of(12, 0), 2000);
-
-
     }
 
-    public static int sumCaloriesPerDay(List<UserMeal> mealList, LocalDate date) {
-        return mealList
-                .stream()
-                .filter(q -> q.getDateTime().toLocalDate().getDayOfMonth() == date.getDayOfMonth())
-                .mapToInt(UserMeal::getCalories).sum();
-
-    }
 
     public static List<UserMealWithExceed> getFilteredWithExceeded(List<UserMeal> mealList, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
-        List<UserMeal> list = mealList
+        Map<LocalDate, Integer> sumCaloriesPerDayList = mealList
                 .stream()
-                .filter(userMeal -> TimeUtil.isBetween(userMeal.getDateTime().toLocalTime(), startTime, endTime))
+                .collect(Collectors.groupingBy(q -> q.getDateTime().toLocalDate(), Collectors.summingInt(UserMeal::getCalories)));
+
+        return mealList
+                .stream()
+                .filter(q -> TimeUtil.isBetween(q.getDateTime().toLocalTime(), startTime, endTime))
+                .map(q -> new UserMealWithExceed(q.getDateTime(), q.getDescription(), q.getCalories(), sumCaloriesPerDayList.get(q.getDateTime().toLocalDate()) > caloriesPerDay))
                 .collect(Collectors.toList());
 
-        return list
-                .stream()
-                .map(q -> {
-                    if (sumCaloriesPerDay(mealList, q.getDateTime().toLocalDate()) > caloriesPerDay)
-                        return new UserMealWithExceed(q.getDateTime(), q.getDescription(), q.getCalories(), true);
-                    else
-                        return new UserMealWithExceed(q.getDateTime(), q.getDescription(), q.getCalories(), false);
-                })
-                .collect(Collectors.toList());
     }
 }
