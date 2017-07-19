@@ -28,14 +28,7 @@ public class MealServlet extends HttpServlet {
 
         log.debug("redirect to meals");
 
-        Map<LocalDate, Integer> caloriesSumByDate = MealsListBean.getMeals()
-                .stream()
-                .collect(Collectors.toMap(Meal::getDate, Meal::getCalories, Integer::sum));
-
-        List<MealWithExceed> mealList = MealsListBean.getMeals()
-                .stream()
-                .map(meal -> MealsUtil.createWithExceed(meal, caloriesSumByDate.get(meal.getDate()) > MealsListBean.getCaloriesPerDay()))
-                .collect(Collectors.toList());
+        List<MealWithExceed> mealList = MealsUtil.getExceeded(MealsListBean.getMeals(), MealsListBean.getCaloriesPerDay());
 
         for (MealWithExceed q : mealList) {
             request.setAttribute("date", q.getDate());
