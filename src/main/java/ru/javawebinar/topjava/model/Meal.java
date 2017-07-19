@@ -14,7 +14,11 @@ public class Meal {
 
     private int calories;
 
-   // public Meal(int id, LocalDateTime dateTime, String description, int calories) {
+    public Meal(int i, LocalDateTime of, String завтрак, int i1) {
+
+    }
+
+    // public Meal(int id, LocalDateTime dateTime, String description, int calories) {
        // this.id = id;
        // this.dateTime = dateTime;
        // this.description = description;
