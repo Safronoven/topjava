@@ -17,8 +17,8 @@ import javax.servlet.http.HttpServletResponse;
 
 public class MealServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    private static String INSERT_OR_EDIT = "/meals.jsp";
-    private static String LIST_MEAL = "/listMeal.jsp";
+    private static String INSERT_OR_EDIT = "meals.jsp";
+    private static String LIST_MEAL = "listMeal.jsp";
     private MealsDao dao;
 
     public MealServlet() {
