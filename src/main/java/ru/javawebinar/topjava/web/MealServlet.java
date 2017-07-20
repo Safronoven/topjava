@@ -30,14 +30,6 @@ public class MealServlet extends HttpServlet {
 
         List<MealWithExceed> mealList = MealsUtil.getExceeded(MealsListBean.getMeals(), MealsListBean.getCaloriesPerDay());
 
-        for (MealWithExceed q : mealList) {
-            request.setAttribute("date", q.getDate());
-            request.setAttribute("time", q.getTime());
-            request.setAttribute("description", q.getDescription());
-            request.setAttribute("calories", q.getCalories());
-            request.setAttribute("exceed", q.isExceed());
-        }
-
         request.setAttribute("mealList", mealList);
         request.getRequestDispatcher("meals.jsp").forward(request, response);
     }
